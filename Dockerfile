@@ -5,13 +5,14 @@ WORKDIR /srv/app
 COPY ./package.json /srv/app/
 RUN npm install
 
+
 # Build container
 FROM node:16-alpine AS builder
 WORKDIR /srv/app
 # copy dependencies
 COPY --from=deps /srv/app/node_modules ./node_modules
 COPY . ./
-RUN rm -rf /srv/app/prisma/migrations
+#RUN rm -rf /srv/app/prisma/migrations
 # run build
 RUN npm run build
 #RUN rm -rf node_modules
@@ -32,7 +33,6 @@ RUN chmod +x npxd.sh
 # copy build files prisma db schema
 COPY --from=builder --chown=1001:1001 /srv/app/. ./
 #RUN ./npxd.sh prisma migrate dev --name init
-#RUN ./npxd.sh ts-node prisma/seed.ts
 # start app
 EXPOSE 3000
 CMD ["dumb-init", "npm", "run", "start"]

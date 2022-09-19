@@ -1,21 +1,22 @@
-import React from 'react'
-import { GetServerSideProps } from 'next'
-import Layout from '../components/Layout'
-import Person, { PersonProps } from '../components/Person'
+import React from "react"
+import { GetServerSideProps } from "next"
+import Layout from "../components/Layout"
+import Person, { PersonProps } from "../components/Person"
 
 type Props = {
   people: PersonProps[]
 }
 
-const Index: React.FC<Props> = props => {
+const Index: React.FC<Props> = (props) => {
   return (
     <Layout>
       <div className="page">
         <h1>People</h1>
         <main>
-          {props.people?.map(person => (
+          {props.people?.map((person) => (
             <div key={person.id} className="person">
               <Person person={person} />
+              console.log(person)
             </div>
           ))}
         </main>
@@ -39,10 +40,10 @@ const Index: React.FC<Props> = props => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch('http://localhost:3000/api/person')
+  const res = await fetch("http://localhost:3000/api/person")
   const people = await res.json()
   return {
-    props: JSON.parse(JSON.stringify({ people })),
+    props: { people },
   }
 }
 
